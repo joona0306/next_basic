@@ -1,10 +1,11 @@
+import style from "@/app/styles/style.module.css";
 import Link from "next/link";
 
 export default function Home() {
   return (
     <>
       <h1>첫 페이지</h1>
-      <ul>
+      <ul className={style.list}>
         <li>
           <Link href="/detail/daegu">대구</Link>
         </li>
