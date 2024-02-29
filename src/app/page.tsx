@@ -1,30 +1,57 @@
 import style from "@/app/styles/style.module.css";
 import Link from "next/link";
+import { Todo } from "./type/TodoType";
 
-export default function Home() {
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+// Open API 호출하기
+const getTodoList = async () => {
+  // Next.js 에 내부 함수
+  // 전체 목록
+  // 주소를 일부러 오류를 발생시켰습니다.
+  const res = await fetch(`${API_URL}/todos`);
+  console.log(res.status);
+  console.log(typeof res.status); // 데이터 종류
+  if (res.status !== 200) {
+    // 에러...
+    throw new Error("데이터를 가져오는데 실패 하였습니다.");
+  } else {
+    return res.json();
+  }
+};
+
+export default async function Home() {
+  const response = await getTodoList();
+  console.log("받은 데이터 : ", response);
+
   return (
     <>
       <h1>첫 페이지</h1>
       <ul className={style.list}>
         <li>
-          <Link href="/detail/daegu">대구</Link>
+          <Link href="/detail/daegu?cityName=대구">대구</Link>
         </li>
         <li>
-          <Link href="/detail/busan">부산</Link>
+          <Link href="/detail/busan?cityName=부산">부산</Link>
         </li>
         <li>
-          <Link href="/detail/daejun">대전</Link>
+          <Link href="/detail/daejun?cityName=대전">대전</Link>
         </li>
         <li>
-          <Link href="/detail/gwangju">광주</Link>
+          <Link href="/detail/gwangju?cityName=광주">광주</Link>
         </li>
         <li>
-          <Link href="/detail/seoul">서울</Link>
+          <Link href="/detail/seoul?cityName=서울">서울</Link>
         </li>
         <li>
-          <Link href="/detail/jeju">제주</Link>
+          <Link href="/detail/jeju?cityName=제주">제주</Link>
         </li>
       </ul>
+      {response.map((item: Todo) => (
+        <div key={item.id}>
+          id {item.userId} :{" "}
+          <Link href={`/todos/${item.id}`}>{item.title}</Link>
+        </div>
+      ))}
     </>
   );
 }
